@@ -68,13 +68,23 @@ end;
 
 
 procedure TEstoque.btnNovoProdutoClick(Sender: TObject);
+var
+  ValorStr: string;
 begin
-//Abre o Cadastro de produto já incluindo um novo registro
-  Application.CreateForm(TProdutos, Produtos);
-  Application.CreateForm(TDM_Produtos, DM_Produtos);
-  Produtos.WindowState := wsMaximized;
-  Produtos.btnIncluir.Click;
-  Produtos.ShowModal;
+  // Abre InputBox para incluir a descrição do produto
+  ValorStr := InputBox('Entrada de Valor', 'Digite a descrição do novo produto:', '');
+
+  if Trim(ValorStr) <> '' then
+  begin
+    Dm_Estoque.qry_pesquisa.SQL.Text := 'INSERT INTO PRODUTOS (DESCRICAO, ESTOQUE_ATUAL) VALUES (:Desc, 0)';
+    Dm_Estoque.qry_pesquisa.ParamByName('Desc').AsString := ValorStr;
+    Dm_Estoque.qry_pesquisa.ExecSQL;
+  end
+  else
+  begin
+    ShowMessage('Descrição não pode ser vazia.');
+  end;
+
   DbgEstoque.DataSource.DataSet.Refresh;
 end;
 
@@ -148,10 +158,15 @@ end;
 
 procedure TEstoque.Verhistrico1Click(Sender: TObject);
 begin
-  Application.CreateForm(THistorico, Historico);
-  Application.CreateForm(TDM_Historico, DM_Historico);
-  Historico.ID := DbgEstoque.DataSource.DataSet.FieldByName('ID').AsInteger;
-  Historico.ShowModal;
+  DM_Historico := TDM_Historico.Create(Application);
+  Historico := THistorico.Create(Application);
+  try
+    Historico.ID := DbgEstoque.DataSource.DataSet.FieldByName('ID').AsInteger;
+    Historico.ShowModal;
+  finally
+    FreeAndNil(Historico);
+    FreeAndNil(DM_Historico);
+  end;
 end;
 
 end.
