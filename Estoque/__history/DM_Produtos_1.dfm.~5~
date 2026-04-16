@@ -1,0 +1,17 @@
+object DM_Produtos: TDM_Produtos
+  Height = 480
+  Width = 640
+  object dsr_Produtos: TDataSource
+    Left = 48
+    Top = 24
+  end
+  object qry_Produtos: TSQLQuery
+    DataSource = dsr_Produtos
+    Params = <>
+    SQL.Strings = (
+      'Select * from PRODUTOS'
+      'where DESCRICAO like :Desc')
+    Left = 104
+    Top = 24
+  end
+end

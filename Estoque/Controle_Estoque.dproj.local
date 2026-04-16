@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2025/08/27 09:08:24.000.008,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2025/08/27 09:18:00.000.067,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2025/08/27 09:18:58.000.232,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Estoque_1.pas</Transaction>
+    <Transaction>2025/08/27 09:18:58.000.232,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Estoque_1.dfm</Transaction>
+    <Transaction>2025/08/27 09:34:24.000.795,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit2.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Produtos_1.pas</Transaction>
+    <Transaction>2025/08/27 09:34:24.000.795,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit2.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Produtos_1.dfm</Transaction>
+    <Transaction>2025/08/27 09:44:23.000.222,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2025/08/27 09:44:39.000.769,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Estoque_1.pas</Transaction>
+    <Transaction>2025/08/27 09:44:39.000.769,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Estoque_1.dfm</Transaction>
+    <Transaction>2025/08/27 09:44:46.000.274,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2025/08/27 09:44:58.000.036,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit2.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Produtos_1.dfm</Transaction>
+    <Transaction>2025/08/27 09:44:58.000.036,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit2.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Produtos_1.pas</Transaction>
+    <Transaction>2025/08/27 09:47:58.000.699,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit3.pas</Transaction>
+    <Transaction>2025/08/27 09:49:14.000.202,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit3.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Produtos_1.pas</Transaction>
+    <Transaction>2025/08/27 09:49:14.000.202,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit3.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Produtos_1.dfm</Transaction>
+    <Transaction>2025/08/27 10:10:21.000.207,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2025/08/27 10:12:31.000.801,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Principal.pas</Transaction>
+    <Transaction>2025/08/27 10:12:31.000.801,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Principal.dfm</Transaction>
+    <Transaction>2025/08/27 10:18:09.000.889,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Controle_Estoque.dproj</Transaction>
+    <Transaction>2025/08/28 08:45:49.000.634,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Unit1.pas</Transaction>
+    <Transaction>2025/08/28 08:46:48.000.541,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Historico_1.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Unit1.pas</Transaction>
+    <Transaction>2025/08/28 08:46:48.000.541,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Historico_1.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Unit1.dfm</Transaction>
+    <Transaction>2025/08/28 08:47:33.000.692,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Unit1.pas</Transaction>
+    <Transaction>2025/08/28 08:47:49.000.410,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Historico_1.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Unit1.pas</Transaction>
+    <Transaction>2025/08/28 08:47:49.000.410,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\DM_Historico_1.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Estoque\Unit1.dfm</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Estoque_1.pas"/>
+    <File Path="Estoque_1.dfm"/>
+    <File Path="Produtos_1.pas"/>
+    <File Path="Produtos_1.dfm"/>
+    <File Path="DM_Estoque_1.pas"/>
+    <File Path="DM_Estoque_1.dfm"/>
+    <File Path="DM_Produtos_1.pas"/>
+    <File Path="DM_Produtos_1.dfm"/>
+    <File Path="Principal.pas"/>
+    <File Path="Principal.dfm"/>
+    <File Path="Historico_1.pas"/>
+    <File Path="Historico_1.dfm"/>
+    <File Path="DM_Historico_1.pas"/>
+    <File Path="DM_Historico_1.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>

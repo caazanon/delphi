@@ -1,0 +1,16 @@
+object DM_Produtos: TDM_Produtos
+  Height = 480
+  Width = 640
+  object dsr_Produtos: TDataSource
+    Left = 48
+    Top = 24
+  end
+  object qry_Produtos: TFDQuery
+    Connection = Frm_Principal.FDConnection1
+    SQL.Strings = (
+      'Select * from PRODUTOS'
+      '')
+    Left = 104
+    Top = 24
+  end
+end

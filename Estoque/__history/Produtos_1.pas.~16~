@@ -1,0 +1,106 @@
+unit Produtos_1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Buttons;
+
+type
+  TProdutos = class(TForm)
+    PageControl: TPageControl;
+    PagPesquisa: TTabSheet;
+    PagManutencao: TTabSheet;
+    edtDescricao: TEdit;
+    lblDescricao: TLabel;
+    dbgProdutos: TDBGrid;
+    btnIncluir: TBitBtn;
+    btnAlterar: TBitBtn;
+    lblDescricaoEdit: TLabel;
+    lblEstqAtual: TLabel;
+    dbEstqAtual: TDBEdit;
+    btnPesquisar: TBitBtn;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    btnSalvar: TBitBtn;
+    btnCancelar: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure btnPesquisarClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnIncluirClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Produtos: TProdutos;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  DM_Produtos_1, Principal;
+
+procedure TProdutos.btnAlterarClick(Sender: TObject);
+begin
+  PageControl.ActivePage := PagManutencao;
+  edtDescricao.readonly := False;
+  DM_Produtos.qry_Produtos.Open;
+  DM_Produtos.qry_Produtos.Edit;
+end;
+
+procedure TProdutos.btnCancelarClick(Sender: TObject);
+begin
+  DM_Produtos.qry_Produtos.Cancel;
+  PageControl.ActivePage := PagPesquisa;
+end;
+
+procedure TProdutos.btnIncluirClick(Sender: TObject);
+begin
+  PageControl.ActivePage := PagManutencao;
+  edtDescricao.readonly := False;
+  DM_Produtos.qry_Produtos.Open;
+  DM_Produtos.qry_Produtos.Insert;
+end;
+
+procedure TProdutos.btnPesquisarClick(Sender: TObject);
+begin
+  DM_Produtos.qry_Produtos.Close;
+
+  if edtDescricao.Text <> '' then
+  begin
+    DM_Produtos.qry_Produtos.SQL[1] := ('where DESCRICAO like :Desc');
+    DM_Produtos.qry_Produtos.ParambyName('Desc').AsString := edtDescricao.Text;
+  end
+  else
+  begin
+    DM_Produtos.qry_Produtos.SQL[1] := ('');
+  end;
+
+  DM_Produtos.qry_Produtos.Open;
+end;
+
+procedure TProdutos.btnSalvarClick(Sender: TObject);
+begin
+  DM_Produtos.qry_Produtos.Post;
+  PageControl.ActivePage := PagPesquisa;
+end;
+
+procedure TProdutos.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DM_Produtos.qry_Produtos.Close;
+end;
+
+procedure TProdutos.FormCreate(Sender: TObject);
+begin
+  PageControl.ActivePage := PagPesquisa;
+end;
+
+end.

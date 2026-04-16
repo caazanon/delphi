@@ -1,0 +1,25 @@
+unit DM_Estoque_1;
+
+interface
+
+uses
+  System.SysUtils, System.Classes;
+
+type
+  TDM_Estoque = class(TDataModule)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DM_Estoque: TDM_Estoque;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

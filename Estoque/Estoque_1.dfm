@@ -1,0 +1,121 @@
+﻿object Estoque: TEstoque
+  Left = 0
+  Top = 0
+  Caption = 'Estoque'
+  ClientHeight = 441
+  ClientWidth = 624
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  TextHeight = 15
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 624
+    Height = 113
+    Align = alTop
+    Color = clGradientActiveCaption
+    ParentBackground = False
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 8
+      Top = 92
+      Width = 362
+      Height = 15
+      Caption = 
+        '* Para visualizar o hist'#243'rico clique com bot'#227'o direito sobre o P' +
+        'roduto'
+    end
+    object btnNovoProduto: TBitBtn
+      Left = 8
+      Top = 9
+      Width = 98
+      Height = 40
+      Caption = 'Novo Produto'
+      TabOrder = 0
+      OnClick = btnNovoProdutoClick
+    end
+    object BtnEditarProduto: TBitBtn
+      Left = 112
+      Top = 9
+      Width = 92
+      Height = 40
+      Caption = 'Editar Produto'
+      TabOrder = 1
+      OnClick = BtnEditarProdutoClick
+    end
+    object BitBtn3: TBitBtn
+      Left = 210
+      Top = 9
+      Width = 87
+      Height = 40
+      Caption = 'Excluir Produto'
+      TabOrder = 2
+      OnClick = BitBtn3Click
+    end
+    object Panel3: TPanel
+      Left = 383
+      Top = 1
+      Width = 240
+      Height = 111
+      Align = alRight
+      BevelOuter = bvNone
+      Color = clGradientActiveCaption
+      ParentBackground = False
+      TabOrder = 3
+      object btnAdicionarEstoque: TBitBtn
+        Left = 8
+        Top = 81
+        Width = 112
+        Height = 25
+        Caption = 'Adicionar Estoque'
+        TabOrder = 0
+        OnClick = btnAdicionarEstoqueClick
+      end
+      object btnRemoverEstoque: TBitBtn
+        Left = 134
+        Top = 81
+        Width = 98
+        Height = 25
+        Caption = 'Remover Estoque'
+        TabOrder = 1
+        OnClick = btnRemoverEstoqueClick
+      end
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 113
+    Width = 624
+    Height = 328
+    Align = alClient
+    TabOrder = 1
+    object DbgEstoque: TDBGrid
+      Left = 1
+      Top = 1
+      Width = 622
+      Height = 326
+      Align = alClient
+      DataSource = DM_Estoque.dsr_Produtos
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      PopupMenu = Histórico
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -12
+      TitleFont.Name = 'Segoe UI'
+      TitleFont.Style = []
+    end
+  end
+  object Histórico: TPopupMenu
+    Left = 584
+    Top = 8
+    object Verhistrico1: TMenuItem
+      Caption = 'Ver hist'#243'rico'
+      OnClick = Verhistrico1Click
+    end
+  end
+end

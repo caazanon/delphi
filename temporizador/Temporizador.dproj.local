@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2022/08/26 08:38:49.999,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/08/26 09:01:49.093,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\U_Cronometro.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2022/08/26 09:01:49.093,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\U_Cronometro.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/08/26 09:03:32.641,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Temporizador.dproj=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2022/08/26 10:25:21.790,C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\temporizador\Temporizador.dproj=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Temporizador.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

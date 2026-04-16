@@ -1,0 +1,25 @@
+unit DM_Historico_1;
+
+interface
+
+uses
+  System.SysUtils, System.Classes;
+
+type
+  TDM_Historico = class(TDataModule)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DM_Historico: TDM_Historico;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

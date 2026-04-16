@@ -1,0 +1,28 @@
+unit DM_Produtos_1;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Data.FMTBcd, Data.DB, Data.SqlExpr,
+  Principal;
+
+type
+  TDataModule3 = class(TDataModule)
+    dsr_Produtos: TDataSource;
+    qry_Produtos: TSQLQuery;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DataModule3: TDataModule3;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

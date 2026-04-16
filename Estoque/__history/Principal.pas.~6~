@@ -1,0 +1,45 @@
+unit Principal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Estoque_1, Produtos_1,
+  Data.DB, Data.SqlExpr, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client;
+
+type
+  TFrm_Principal = class(TForm)
+    btnProdutos: TBitBtn;
+    btnEstoque: TBitBtn;
+    FDConnection1: TFDConnection;
+    procedure btnProdutosClick(Sender: TObject);
+    procedure btnEstoqueClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Frm_Principal: TFrm_Principal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrm_Principal.btnEstoqueClick(Sender: TObject);
+begin
+  Application.CreateForm(TEstoque, Estoque);
+  Estoque.WindowState := wsMaximized;
+end;
+
+procedure TFrm_Principal.btnProdutosClick(Sender: TObject);
+begin
+  Application.CreateForm(TProdutos, Produtos);
+  Produtos.WindowState := wsMaximized;
+end;
+
+end.

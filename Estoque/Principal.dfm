@@ -1,0 +1,54 @@
+object Frm_Principal: TFrm_Principal
+  Left = 0
+  Top = 0
+  Caption = 'Principal'
+  ClientHeight = 162
+  ClientWidth = 306
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Position = poScreenCenter
+  TextHeight = 15
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 306
+    Height = 162
+    Align = alClient
+    Color = clGradientActiveCaption
+    ParentBackground = False
+    TabOrder = 0
+    object btnEstoque: TBitBtn
+      Left = 32
+      Top = 80
+      Width = 233
+      Height = 25
+      Caption = 'Controle de Estoque'
+      TabOrder = 0
+      OnClick = btnEstoqueClick
+    end
+    object btnProdutos: TBitBtn
+      Left = 32
+      Top = 32
+      Width = 233
+      Height = 25
+      Caption = 'Cadastro de Produtos'
+      TabOrder = 1
+      OnClick = btnProdutosClick
+    end
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=FB'
+      'User_Name=SYSDBA'
+      'Database=C:\Users\DELL\Downloads\IBExpert\IBExpert\Estoque'
+      'Password=123'
+      'Server=localhost')
+    Connected = True
+    Left = 320
+    Top = 200
+  end
+end

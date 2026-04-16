@@ -1,0 +1,54 @@
+unit Principal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Estoque_1, Produtos_1,
+  Data.DB, Data.SqlExpr, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client, Vcl.ExtCtrls;
+
+type
+  TFrm_Principal = class(TForm)
+    btnProdutos: TBitBtn;
+    btnEstoque: TBitBtn;
+    FDConnection1: TFDConnection;
+    Panel1: TPanel;
+    procedure btnProdutosClick(Sender: TObject);
+    procedure btnEstoqueClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Frm_Principal: TFrm_Principal;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  DM_Produtos_1, DM_Estoque_1;
+
+//Cria as telas secundárias a partir da tela incial
+procedure TFrm_Principal.btnEstoqueClick(Sender: TObject);
+begin
+  Application.CreateForm(TEstoque, Estoque);
+  Application.CreateForm(TDM_Estoque, DM_Estoque);
+  Estoque.WindowState := wsMaximized;
+  Estoque.ShowModal;
+end;
+
+procedure TFrm_Principal.btnProdutosClick(Sender: TObject);
+begin
+  Application.CreateForm(TProdutos, Produtos);
+  Application.CreateForm(TDM_Produtos, DM_Produtos);
+  Produtos.WindowState := wsMaximized;
+  Produtos.ShowModal;
+end;
+
+end.

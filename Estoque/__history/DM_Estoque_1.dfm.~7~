@@ -1,0 +1,32 @@
+object DM_Estoque: TDM_Estoque
+  OnCreate = DataModuleCreate
+  Height = 480
+  Width = 640
+  object qry_Produtos: TFDQuery
+    CachedUpdates = True
+    Connection = Frm_Principal.FDConnection1
+    SQL.Strings = (
+      'Select * from PRODUTOS'
+      '')
+    Left = 104
+    Top = 24
+    ParamData = <
+      item
+        Name = 'ID'
+        ParamType = ptInput
+      end
+      item
+        Name = 'DESCRICAO'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ESTOQUE_ATUAL'
+        ParamType = ptInput
+      end>
+  end
+  object dsr_Produtos: TDataSource
+    DataSet = qry_Produtos
+    Left = 48
+    Top = 24
+  end
+end

@@ -1,0 +1,30 @@
+unit Historico_1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids;
+
+type
+  THistorico = class(TForm)
+    dbgHistorico: TDBGrid;
+  private
+    { Private declarations }
+    FID: Integer;
+  public
+    { Public declarations }
+    property ID: Integer read FID Write FID;
+  end;
+
+var
+  Historico: THistorico;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  DM_Historico_1;
+
+end.
