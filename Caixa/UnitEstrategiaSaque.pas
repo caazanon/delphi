@@ -1,0 +1,357 @@
+﻿unit UnitEstrategiaSaque;
+
+interface
+
+uses
+  System.SysUtils, System.Generics.Collections, UnitInventario;
+
+type
+  TResultadoSaque = record
+    Sucesso: Boolean;
+    Mensagem: string;
+    Cedulas: TArray<TCaixa>;
+    ValorTotal: Currency;
+    ValorSugerido: Currency;  // Valor alternativo sugerido para saque
+  end;
+
+  /// <summary>
+  /// Contrato para a estratégia de composição de cédulas
+  /// Implementa o padrão Strategy
+  /// </summary>
+  IEstrategiaComposicao = interface
+    ['{B7F3E8A1-2D4C-4E8F-9A5B-1C3D6E8F9A2B}']
+    
+    /// <summary>
+    /// Compor o valor solicitado usando as cédulas disponíveis no inventário
+    /// </summary>
+    function ComporValor(AValor: Currency; AInventario: TInventario): TResultadoSaque;
+    
+    /// <summary>
+    /// Retorna o nome da estratégia
+    /// </summary>
+    function Nome: string;
+  end;
+
+  /// <summary>
+  /// Estratégia Padrão: Busca a menor quantidade total de cédulas
+  /// Prioriza cédulas de maior valor
+  /// </summary>
+  TEstrategiaMenorQuantidade = class(TInterfacedObject, IEstrategiaComposicao)
+  public
+    function ComporValor(AValor: Currency; AInventario: TInventario): TResultadoSaque;
+    function Nome: string;
+  end;
+
+  /// <summary>
+  /// Estratégia Alternativa: Prioriza a preservação das cédulas de maior valor
+  /// Utiliza cédulas de menor valor o máximo possível
+  /// </summary>
+  TEstrategiaPreservarMaiorValor = class(TInterfacedObject, IEstrategiaComposicao)
+  public
+    function ComporValor(AValor: Currency; AInventario: TInventario): TResultadoSaque;
+    function Nome: string;
+  end;
+
+implementation
+
+{ TEstrategiaMenorQuantidade }
+
+function TEstrategiaMenorQuantidade.Nome: string;
+begin
+  Result := 'Menor Quantidade de Cédulas';
+end;
+
+// Função auxiliar para calcular o menor valor possível de saque
+function CalcularMenorValorPossivel(AInventario: TInventario;
+  ACopiaInventario: TDictionary<Currency, Integer>): Currency;
+var
+  LCaixaArray: TArray<TCaixa>;
+  LCaixa: TCaixa;
+  LMenorValor: Currency;
+begin
+  Result := 0;
+  LCaixaArray := AInventario.ObterCaixa;
+  LMenorValor := 0;
+  
+  // Encontra a menor cédula disponível
+  for LCaixa in LCaixaArray do
+  begin
+    if ACopiaInventario[LCaixa.Valor] > 0 then
+    begin
+      if (LMenorValor = 0) or (LCaixa.Valor < LMenorValor) then
+        LMenorValor := LCaixa.Valor;
+    end;
+  end;
+  
+  Result := LMenorValor;
+end;
+
+function TEstrategiaMenorQuantidade.ComporValor(AValor: Currency; 
+  AInventario: TInventario): TResultadoSaque;
+var
+  LCaixaArray: TArray<TCaixa>;
+  LCopiaInventario: TDictionary<Currency, Integer>;
+  LValorRestante: Currency;
+  LCaixa: TCaixa;
+  LCaixaItem: TCaixa;
+  LQuantidade: Integer;
+  LList: TList<TCaixa>;
+  I: Integer;
+begin
+  Result.Sucesso := False;
+  Result.Mensagem := '';
+  Result.ValorTotal := 0;
+  Result.ValorSugerido := 0;
+  SetLength(Result.Cedulas, 0);
+  
+  if AValor <= 0 then
+  begin
+    Result.Mensagem := 'Valor deve ser maior que zero';
+    Exit;
+  end;
+  
+  if AValor > AInventario.ValorTotal then
+  begin
+    Result.Mensagem := 'Valor solicitado excede o saldo disponível no caixa';
+    Exit;
+  end;
+  
+  // Cria uma cópia do inventário para simulação
+  LCopiaInventario := TDictionary<Currency, Integer>.Create;
+  try
+    LCaixaArray := AInventario.ObterCaixa;
+    for LCaixa in LCaixaArray do
+      LCopiaInventario.Add(LCaixa.Valor, LCaixa.Quantidade);
+      
+    LValorRestante := AValor;
+    LList := TList<TCaixa>.Create;
+    try
+      // Ordena denominações em ordem decrescente (maior valor primeiro)
+      for LCaixa in LCaixaArray do
+      begin
+        if LValorRestante <= 0 then
+          Break;
+          
+        LQuantidade := Trunc(LValorRestante / LCaixa.Valor);
+        if LQuantidade > LCopiaInventario[LCaixa.Valor] then
+          LQuantidade := LCopiaInventario[LCaixa.Valor];
+          
+        if LQuantidade > 0 then
+        begin
+          LCaixaItem.Valor := LCaixa.Valor;
+          LCaixaItem.Quantidade := LQuantidade;
+          LList.Add(LCaixaItem);
+          LCopiaInventario[LCaixa.Valor] :=
+            LCopiaInventario[LCaixa.Valor] - LQuantidade;
+          LValorRestante := LValorRestante - (LCaixa.Valor * LQuantidade);
+        end;
+      end;
+      
+      // Verifica se foi possível compor o valor exato
+      if LValorRestante = 0 then
+      begin
+        Result.Sucesso := True;
+        Result.Mensagem := 'Saque realizado com sucesso';
+        Result.Cedulas := LList.ToArray;
+        
+        // Calcula o valor total das cédulas
+        for I := 0 to Length(Result.Cedulas) - 1 do
+          Result.ValorTotal := Result.ValorTotal + 
+            (Result.Cedulas[I].Valor * Result.Cedulas[I].Quantidade);
+            
+        // Atualiza o inventário real
+        for I := 0 to Length(Result.Cedulas) - 1 do
+          AInventario.RemoverCaixa(Result.Cedulas[I].Valor,
+            Result.Cedulas[I].Quantidade);
+      end
+      else
+      begin
+        // Calcula o menor valor possível com as cédulas disponíveis
+        Result.ValorSugerido := CalcularMenorValorPossivel(AInventario, LCopiaInventario);
+        
+        if Result.ValorSugerido > 0 then
+          Result.Mensagem := Format(
+            'Não é possível compor R$ %s com as cédulas disponíveis. ' +
+            'Sugestão: você pode sacar R$ %s',
+            [FormatFloat('0.00', AValor), FormatFloat('0.00', Result.ValorSugerido)])
+        else
+          Result.Mensagem := 'Não é possível compor o valor solicitado com as cédulas disponíveis';
+      end;
+    finally
+      LList.Free;
+    end;
+  finally
+    LCopiaInventario.Free;
+  end;
+end;
+
+{ TEstrategiaPreservarMaiorValor }
+
+function TEstrategiaPreservarMaiorValor.Nome: string;
+begin
+  Result := 'Preservar Cédulas de Maior Valor';
+end;
+
+function TEstrategiaPreservarMaiorValor.ComporValor(AValor: Currency; 
+  AInventario: TInventario): TResultadoSaque;
+var
+  LCaixaArray: TArray<TCaixa>;
+  LCopiaInventario: TDictionary<Currency, Integer>;
+  LValorRestante: Currency;
+  LCaixa: TCaixa;
+  LCaixaItem: TCaixa;
+  LQuantidade: Integer;
+  LList: TList<TCaixa>;
+  I, J: Integer;
+  LDenominacoesOrdenadas: TArray<TCaixa>;
+begin
+  Result.Sucesso := False;
+  Result.Mensagem := '';
+  Result.ValorTotal := 0;
+  Result.ValorSugerido := 0;
+  SetLength(Result.Cedulas, 0);
+  
+  if AValor <= 0 then
+  begin
+    Result.Mensagem := 'Valor deve ser maior que zero';
+    Exit;
+  end;
+  
+  if AValor > AInventario.ValorTotal then
+  begin
+    Result.Mensagem := 'Valor solicitado excede o saldo disponível no caixa';
+    Exit;
+  end;
+  
+  // Cria uma cópia do inventário para simulação
+  LCopiaInventario := TDictionary<Currency, Integer>.Create;
+  try
+    LCaixaArray := AInventario.ObterCaixa;
+    for LCaixa in LCaixaArray do
+      LCopiaInventario.Add(LCaixa.Valor, LCaixa.Quantidade);
+      
+    LValorRestante := AValor;
+    LList := TList<TCaixa>.Create;
+    try
+      // Ordena denominações em ordem crescente (menor valor primeiro)
+      // para preservar cédulas de maior valor
+      SetLength(LDenominacoesOrdenadas, Length(LCaixaArray));
+      for I := 0 to Length(LCaixaArray) - 1 do
+        LDenominacoesOrdenadas[I] := LCaixaArray[I];
+        
+      // Ordena em ordem crescente
+      for I := 0 to Length(LDenominacoesOrdenadas) - 2 do
+        for J := I + 1 to Length(LDenominacoesOrdenadas) - 1 do
+          if LDenominacoesOrdenadas[I].Valor > LDenominacoesOrdenadas[J].Valor then
+          begin
+            LCaixa := LDenominacoesOrdenadas[I];
+            LDenominacoesOrdenadas[I] := LDenominacoesOrdenadas[J];
+            LDenominacoesOrdenadas[J] := LCaixa;
+          end;
+          
+      // Tenta usar cédulas de menor valor primeiro
+      for LCaixa in LDenominacoesOrdenadas do
+      begin
+        if LValorRestante <= 0 then
+          Break;
+          
+        LQuantidade := Trunc(LValorRestante / LCaixa.Valor);
+        if LQuantidade > LCopiaInventario[LCaixa.Valor] then
+          LQuantidade := LCopiaInventario[LCaixa.Valor];
+          
+        if LQuantidade > 0 then
+        begin
+          LCaixaItem.Valor := LCaixa.Valor;
+          LCaixaItem.Quantidade := LQuantidade;
+          LList.Add(LCaixaItem);
+          LCopiaInventario[LCaixa.Valor] := 
+            LCopiaInventario[LCaixa.Valor] - LQuantidade;
+          LValorRestante := LValorRestante - (LCaixa.Valor * LQuantidade);
+        end;
+      end;
+      
+      // Se ainda restar valor, tenta usar cédulas maiores
+      if LValorRestante > 0 then
+      begin
+        // Ordena em ordem decrescente
+        for I := 0 to Length(LDenominacoesOrdenadas) - 2 do
+          for J := I + 1 to Length(LDenominacoesOrdenadas) - 1 do
+            if LDenominacoesOrdenadas[I].Valor < LDenominacoesOrdenadas[J].Valor then
+            begin
+              LCaixa := LDenominacoesOrdenadas[I];
+              LDenominacoesOrdenadas[I] := LDenominacoesOrdenadas[J];
+              LDenominacoesOrdenadas[J] := LCaixa;
+            end;
+            
+        for LCaixa in LDenominacoesOrdenadas do
+        begin
+          if LValorRestante <= 0 then
+            Break;
+            
+          // Verifica se já usamos essa denominação
+          LQuantidade := 0;
+          for I := 0 to LList.Count - 1 do
+            if LList[I].Valor = LCaixa.Valor then
+            begin
+              LQuantidade := LList[I].Quantidade;
+              Break;
+            end;
+            
+          if LQuantidade < LCopiaInventario[LCaixa.Valor] then
+          begin
+            LQuantidade := Trunc(LValorRestante / LCaixa.Valor);
+            if LQuantidade > (LCopiaInventario[LCaixa.Valor] - LQuantidade) then
+              LQuantidade := LCopiaInventario[LCaixa.Valor] - LQuantidade;
+              
+            if LQuantidade > 0 then
+            begin
+              LCaixaItem.Valor := LCaixa.Valor;
+              LCaixaItem.Quantidade := LQuantidade;
+              LList.Add(LCaixaItem);
+              LCopiaInventario[LCaixa.Valor] := 
+                LCopiaInventario[LCaixa.Valor] - LQuantidade;
+              LValorRestante := LValorRestante - (LCaixa.Valor * LQuantidade);
+            end;
+          end;
+        end;
+      end;
+      
+      // Verifica se foi possível compor o valor exato
+      if LValorRestante = 0 then
+      begin
+        Result.Sucesso := True;
+        Result.Mensagem := 'Saque realizado com sucesso';
+        Result.Cedulas := LList.ToArray;
+        
+        // Calcula o valor total das cédulas
+        for I := 0 to Length(Result.Cedulas) - 1 do
+          Result.ValorTotal := Result.ValorTotal + 
+            (Result.Cedulas[I].Valor * Result.Cedulas[I].Quantidade);
+            
+        // Atualiza o inventário real
+        for I := 0 to Length(Result.Cedulas) - 1 do
+          AInventario.RemoverCaixa(Result.Cedulas[I].Valor,
+            Result.Cedulas[I].Quantidade);
+      end
+      else
+      begin
+        // Calcula o menor valor possível com as cédulas disponíveis
+        Result.ValorSugerido := CalcularMenorValorPossivel(AInventario, LCopiaInventario);
+        
+        if Result.ValorSugerido > 0 then
+          Result.Mensagem := Format(
+            'Não é possível compor R$ %s com as cédulas disponíveis. ' +
+            'Sugestão: você pode sacar R$ %s',
+            [FormatFloat('0.00', AValor), FormatFloat('0.00', Result.ValorSugerido)])
+        else
+          Result.Mensagem := 'Não é possível compor o valor solicitado com as cédulas disponíveis';
+      end;
+    finally
+      LList.Free;
+    end;
+  finally
+    LCopiaInventario.Free;
+  end;
+end;
+
+end.

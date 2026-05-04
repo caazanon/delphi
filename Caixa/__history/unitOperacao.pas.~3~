@@ -1,0 +1,129 @@
+﻿unit unitOperacao;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, UnitInventario;
+
+type
+  TfrmOperacao = class(TForm)
+    btnAdicionar: TButton;
+    btnRemover: TButton;
+    btnConsultar: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnAdicionarClick(Sender: TObject);
+    procedure btnRemoverClick(Sender: TObject);
+    procedure btnConsultarClick(Sender: TObject);
+  private
+    { Private declarations }
+    FInventario: TInventario;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmOperacao: TfrmOperacao;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmOperacao.FormCreate(Sender: TObject);
+begin
+  FInventario := TInventario.Create;
+end;
+
+procedure TfrmOperacao.FormDestroy(Sender: TObject);
+begin
+  FInventario.Free;
+end;
+
+procedure TfrmOperacao.btnAdicionarClick(Sender: TObject);
+var
+  LValor: Currency;
+  LQuantidade: Integer;
+  LInput: string;
+begin
+  // Solicita o tipo da cédula
+  LInput := InputBox('Digite o tipo da Cédula (notas/centávos)', 'Digite o valor (ex: 5, 10, 50, 100):', '');
+  if not TryStrToCurr(LInput, LValor) then
+  begin
+    ShowMessage('Valor inválido!');
+    Exit;
+  end;
+
+  // Solicita a quantidade
+  LInput := InputBox('Digite a quantidade: ', 'Quantidade:', '1');
+  if not TryStrToInt(LInput, LQuantidade) then
+  begin
+    ShowMessage('Quantidade inválida!');
+    Exit;
+  end;
+
+  try
+    FInventario.AdicionarCaixa(LValor, LQuantidade);
+    ShowMessage(Format('Adicionado: %d unidade(s) de R$ %s', [LQuantidade, FormatFloat('0.00', LValor)]));
+  except
+    on E: Exception do
+      ShowMessage('Erro: ' + E.Message);
+  end;
+end;
+
+procedure TfrmOperacao.btnRemoverClick(Sender: TObject);
+var
+  LValor: Currency;
+  LQuantidade: Integer;
+  LInput: string;
+begin
+  // Solicita o tipo da cédula
+  LInput := InputBox('Remover: Digite o tipo da Cédula (notas/centávos)', 'Digite o valor (ex: 5, 10, 50, 100):', '');
+  if not TryStrToCurr(LInput, LValor) then
+  begin
+    ShowMessage('Valor inválido!');
+    Exit;
+  end;
+
+  // Solicita a quantidade
+  LInput := InputBox('Remover: Digite a quantidade', 'Quantidade:', '1');
+  if not TryStrToInt(LInput, LQuantidade) then
+  begin
+    ShowMessage('Quantidade inválida!');
+    Exit;
+  end;
+
+  try
+    if FInventario.RemoverCaixa(LValor, LQuantidade) then
+      ShowMessage(Format('Removido: %d unidade(s) de R$ %s', [LQuantidade, FormatFloat('0.00', LValor)]))
+    else
+      ShowMessage('Não foi possível remover. Verifique se a denominação existe e há quantidade suficiente.');
+  except
+    on E: Exception do
+      ShowMessage('Erro: ' + E.Message);
+  end;
+end;
+
+procedure TfrmOperacao.btnConsultarClick(Sender: TObject);
+var
+  LDenominacoes: TArray<TDenominacao>;
+  I: Integer;
+  LMensagem: string;
+begin
+  LDenominacoes := FInventario.ObterCaixa;
+
+  if Length(LDenominacoes) = 0 then
+  begin
+    ShowMessage('O inventário está vazio.');
+    Exit;
+  end;
+
+  for I := 0 to Length(LDenominacoes) - 1 do
+    LMensagem := LMensagem + LDenominacoes[I].ToString + #13#10;
+
+  LMensagem := #13#10 + 'Valor Total: R$ ' + FormatFloat('0.00', FInventario.ValorTotal);
+
+  ShowMessage('Estoque disponível: '+LMensagem);
+end;
+
+end.

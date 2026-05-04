@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2025/09/07 13:14:22.000.886,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/05/01 10:47:56.000.539,=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/05/01 10:48:19.000.946,D:\Documentos\Git\delphi\Caixa.pas=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/05/01 10:48:19.000.946,D:\Documentos\Git\delphi\Caixa.dfm=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2026/05/01 10:50:45.000.497,D:\Documentos\Git\delphi\Caixa\SisCaixa.dproj=C:\Users\DELL\OneDrive\Documentos\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2026/05/01 10:51:25.000.442,=D:\Documentos\Git\delphi\Caixa\Unit1.pas</Transaction>
+    <Transaction>2026/05/01 10:52:46.000.067,D:\Documentos\Git\delphi\Caixa\UnitInventario.pas=D:\Documentos\Git\delphi\Caixa\Unit1.pas</Transaction>
+    <Transaction>2026/05/04 11:49:41.000.085,=D:\Documentos\Git\delphi\Caixa\Unit1.pas</Transaction>
+    <Transaction>2026/05/04 11:53:40.000.661,D:\Documentos\Git\delphi\Caixa\Unit1.pas=D:\Documentos\Git\delphi\Caixa\unitLogin.pas</Transaction>
+    <Transaction>2026/05/04 11:53:40.000.661,D:\Documentos\Git\delphi\Caixa\Unit1.dfm=D:\Documentos\Git\delphi\Caixa\unitLogin.dfm</Transaction>
+    <Transaction>2026/05/04 12:46:11.000.810,=D:\Documentos\Git\delphi\Caixa\UnitNotificacao.pas</Transaction>
+    <Transaction>2026/05/04 12:46:11.000.799,=D:\Documentos\Git\delphi\Caixa\UnitConta.pas</Transaction>
+  </Transactions>
+</BorlandProject>

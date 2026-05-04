@@ -1,0 +1,57 @@
+# Compilados
+*.exe
+*.dll
+*.bpl
+*.dcp
+*.dcu
+*.o
+*.obj
+*.lib
+*.a
+
+# Debug / cache
+*.identcache
+*.local
+*.map
+*.tds
+*.rsm
+*.drc
+
+# Backup
+*.~*
+*.bak
+
+# Configuração do projeto (usuário)
+*.dproj.local
+*.groupproj.local
+*.stat
+
+# Arquivos da IDE
+*.skincfg
+*.tvsconfig
+
+# Histórico e temporários
+__history/
+*.history
+
+# Output directories
+Win32/Debug/
+Win32/Release/
+Win64/Debug/
+Win64/Release/
+Android/
+iOSDevice/
+iOSSimulator/
+OSX32/
+OSX64/
+
+# Packages
+*.bpi
+*.dcpil
+
+# Deploy
+*.deployproj
+
+# Outros
+*.log
+*.tmp

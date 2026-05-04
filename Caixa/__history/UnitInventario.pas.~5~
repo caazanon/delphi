@@ -1,0 +1,123 @@
+unit UnitInventario;
+
+interface
+
+uses
+  System.SysUtils, System.Generics.Collections;
+
+type
+  /// <summary>
+  /// Representa uma denominação de cédula ou moeda
+  /// </summary>
+  TDenominacao = record
+    Valor: Currency;
+    Quantidade: Integer;
+
+    function ToString: string;
+  end;
+
+  /// <summary>
+  /// Classe responsável pela gestão do inventário de cédulas e moedas
+  /// Suporta adição/remoção dinâmica de denominações
+  /// </summary>
+  TInventario = class
+  private
+    FDenominacoes: TDictionary<Currency, Integer>;
+
+    function GetValorTotal: Currency;
+    function GetDenominacao(AValor: Currency): Integer;
+    procedure SetDenominacao(AValor: Currency; AQuantidade: Integer);
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    procedure AdicionarDenominacao(AValor: Currency; AQuantidade: Integer);
+    function RemoverDenominacao(AValor: Currency; AQuantidade: Integer): Boolean;
+
+  end;
+
+implementation
+
+{ TDenominacao }
+
+function TDenominacao.ToString: string;
+begin
+  Result := Format('R$ %s: %d', [FormatFloat('0.00', Valor), Quantidade]);
+end;
+
+{ TInventario }
+
+constructor TInventario.Create;
+begin
+  inherited Create;
+  FDenominacoes := TDictionary<Currency, Integer>.Create;
+end;
+
+destructor TInventario.Destroy;
+begin
+  FDenominacoes.Free;
+  inherited Destroy;
+end;
+
+function TInventario.GetValorTotal: Currency;
+var
+  LPair: TPair<Currency, Integer>;
+begin
+  Result := 0;
+  for LPair in FDenominacoes do
+    Result := Result + (LPair.Key * LPair.Value);
+end;
+
+function TInventario.GetDenominacao(AValor: Currency): Integer;
+begin
+  if not FDenominacoes.TryGetValue(AValor, Result) then
+    Result := 0;
+end;
+
+procedure TInventario.SetDenominacao(AValor: Currency; AQuantidade: Integer);
+begin
+  if AQuantidade <= 0 then
+    FDenominacoes.Remove(AValor)
+  else
+    FDenominacoes.AddOrSetValue(AValor, AQuantidade);
+end;
+
+procedure TInventario.AdicionarDenominacao(AValor: Currency; AQuantidade: Integer);
+var
+  LQuantidadeAtual: Integer;
+begin
+  if AQuantidade <= 0 then
+    raise Exception.Create('Quantidade deve ser maior que zero');
+
+  if AValor <= 0 then
+    raise Exception.Create('Valor deve ser maior que zero');
+
+  if FDenominacoes.TryGetValue(AValor, LQuantidadeAtual) then
+    FDenominacoes[AValor] := LQuantidadeAtual + AQuantidade
+  else
+    FDenominacoes.Add(AValor, AQuantidade);
+end;
+
+function TInventario.RemoverDenominacao(AValor: Currency; AQuantidade: Integer): Boolean;
+var
+  LQuantidadeAtual: Integer;
+begin
+  Result := False;
+
+  if AQuantidade <= 0 then
+    raise Exception.Create('Quantidade deve ser maior que zero');
+
+  if not FDenominacoes.TryGetValue(AValor, LQuantidadeAtual) then
+    Exit;
+
+  if LQuantidadeAtual < AQuantidade then
+    Exit;
+
+  if LQuantidadeAtual = AQuantidade then
+    FDenominacoes.Remove(AValor)
+  else
+    FDenominacoes[AValor] := LQuantidadeAtual - AQuantidade;
+
+  Result := True;
+end;

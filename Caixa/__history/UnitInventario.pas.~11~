@@ -1,0 +1,158 @@
+unit UnitInventario;
+
+interface
+
+uses
+  System.SysUtils, System.Generics.Collections;
+
+type
+  /// <summary>
+  /// Representa uma denominação de cédula ou moeda
+  /// </summary>
+  TCaixa = record
+    Valor: Currency;
+    Quantidade: Integer;
+
+    function ToString: string;
+  end;
+
+  /// <summary>
+  /// Classe responsável pela gestão do inventário de cédulas e moedas
+  /// Suporta adição/remoção dinâmica de denominações
+  /// </summary>
+  TInventario = class
+  private
+    FCaixa: TDictionary<Currency, Integer>;
+
+    function GetValorTotal: Currency;
+    function GetValores(AValor: Currency): Integer;
+    procedure SetCaixa(AValor: Currency; AQuantidade: Integer);
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    procedure AdicionarCaixa(AValor: Currency; AQuantidade: Integer);
+    function RemoverCaixa(AValor: Currency; AQuantidade: Integer): Boolean;
+    function ObterCaixa: TArray<TCaixa>;
+
+  end;
+
+implementation
+
+{ TDenominacao }
+
+function TCaixa.ToString: string;
+begin
+  Result := Format('R$ %s: %d', [FormatFloat('0.00', Valor), Quantidade]);
+end;
+
+{ TInventario }
+
+constructor TInventario.Create;
+begin
+  inherited Create;
+  FCaixa := TDictionary<Currency, Integer>.Create;
+end;
+
+destructor TInventario.Destroy;
+begin
+  FCaixa.Free;
+  inherited Destroy;
+end;
+
+function TInventario.GetValorTotal: Currency;
+var
+  LPair: TPair<Currency, Integer>;
+begin
+  Result := 0;
+  for LPair in FCaixa do
+    Result := Result + (LPair.Key * LPair.Value);
+end;
+
+function TInventario.GetValores(AValor: Currency): Integer;
+begin
+  if not FCaixa.TryGetValue(AValor, Result) then
+    Result := 0;
+end;
+
+procedure TInventario.SetCaixa(AValor: Currency; AQuantidade: Integer);
+begin
+  if AQuantidade <= 0 then
+    FCaixa.Remove(AValor)
+  else
+    FCaixa.AddOrSetValue(AValor, AQuantidade);
+end;
+
+procedure TInventario.AdicionarCaixa(AValor: Currency; AQuantidade: Integer);
+var
+  LQuantidadeAtual: Integer;
+begin
+  if AQuantidade <= 0 then
+    raise Exception.Create('Quantidade deve ser maior que zero');
+
+  if AValor <= 0 then
+    raise Exception.Create('Valor deve ser maior que zero');
+
+  if FCaixa.TryGetValue(AValor, LQuantidadeAtual) then
+    FCaixa[AValor] := LQuantidadeAtual + AQuantidade
+  else
+    FCaixa.Add(AValor, AQuantidade);
+end;
+
+function TInventario.RemoverCaixa(AValor: Currency; AQuantidade: Integer): Boolean;
+var
+  LQuantidadeAtual: Integer;
+begin
+  Result := False;
+
+  if AQuantidade <= 0 then
+    raise Exception.Create('Quantidade deve ser maior que zero');
+
+  if not FCaixa.TryGetValue(AValor, LQuantidadeAtual) then
+    Exit;
+
+  if LQuantidadeAtual < AQuantidade then
+    Exit;
+
+  if LQuantidadeAtual = AQuantidade then
+    FCaixa.Remove(AValor)
+  else
+    FCaixa[AValor] := LQuantidadeAtual - AQuantidade;
+
+  Result := True;
+end;
+
+function TInventario.ObterCaixa: TArray<TCaixa>;
+var
+  LList: TList<TCaixa>;
+  LPair: TPair<Currency, Integer>;
+  LCaixa: TCaixa;
+begin
+  LList := TList<TCaixa>.Create;
+  try
+    for LPair in FCaixa do
+    begin
+      LCaixa.Valor := LPair.Key;
+      LCaixa.Quantidade := LPair.Value;
+      LList.Add(LCaixa);
+    end;
+
+    // Ordena por valor decrescente
+    LList.Sort(TComparer<TCaixa>.Construct(
+      function(const Left, Right: TCaixa): Integer
+      begin
+        if Left.Valor > Right.Valor then
+          Result := -1
+        else if Left.Valor < Right.Valor then
+          Result := 1
+        else
+          Result := 0;
+      end));
+
+    Result := LList.ToArray;
+  finally
+    LList.Free;
+  end;
+
+end;

@@ -1,0 +1,158 @@
+﻿unit unitOperacao;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, UnitInventario, UnitEstrategiaSaque, UnitNotificacao,
+  UnitGerenciadorContas;
+
+type
+  TfrmOperacao = class(TForm)
+    btnAdicionar: TButton;
+    btnRemover: TButton;
+    btnConsultar: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnAdicionarClick(Sender: TObject);
+    procedure btnRemoverClick(Sender: TObject);
+    procedure btnConsultarClick(Sender: TObject);
+  private
+    FInventario: TInventario;
+    FEstrategia: IEstrategiaComposicao;
+    FNotificadores: TGerenciadorNotificacoes;
+    FGerenciadorContas: TGerenciadorContas;
+  end;
+
+var
+  frmOperacao: TfrmOperacao;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmOperacao.FormCreate(Sender: TObject);
+begin
+  FInventario := TInventario.Create;
+  // Estratégia configurada externamente (padrão: Menor Quantidade)
+  FEstrategia := TEstrategiaMenorQuantidade.Create;
+  // Registra os notificadores uma única vez
+  FNotificadores := TGerenciadorNotificacoes.Create;
+  FNotificadores.AdicionarNotificador(TNotificadorArquivo.Create);
+  FNotificadores.AdicionarNotificador(TNotificadorConsole.Create);
+  FGerenciadorContas := TGerenciadorContas.Create;
+end;
+
+procedure TfrmOperacao.FormDestroy(Sender: TObject);
+begin
+  FNotificadores.Free;
+  FInventario.Free;
+end;
+
+procedure TfrmOperacao.btnAdicionarClick(Sender: TObject);
+var
+  LValor: Currency;
+  LQuantidade: Integer;
+  LInput: string;
+begin
+  // Solicita o tipo da cédula
+  LInput := InputBox('Adicionar', 'Digite o tipo da Cédula (notas/centávos) ex: 5, 10, 50, 100:', '');
+  if not TryStrToCurr(LInput, LValor) then
+  begin
+    ShowMessage('Valor inválido!');
+    Exit;
+  end;
+
+  // Solicita a quantidade
+  LInput := InputBox('Digite a quantidade: ', 'Quantidade:', '1');
+  if not TryStrToInt(LInput, LQuantidade) then
+  begin
+    ShowMessage('Quantidade inválida!');
+    Exit;
+  end;
+
+  try
+    FInventario.AdicionarCaixa(LValor, LQuantidade);
+    FNotificadores.NotificarTodos(Format('Adicionado: %d unidade(s) de R$ %s', [LQuantidade, FormatFloat('0.00', LValor)]));
+    FGerenciadorContas.RegistrarTransacao(LValor * LQuantidade, 'Entrada');
+  except
+    on E: Exception do
+      ShowMessage('Erro: ' + E.Message);
+  end;
+end;
+
+procedure TfrmOperacao.btnRemoverClick(Sender: TObject);
+var
+  LValor: Currency;
+  LInput: string;
+  LResultado: TResultadoSaque;
+  I: Integer;
+  LMensagem: string;
+begin
+  // Verifica se há saldo
+  if FInventario.ValorTotal = 0 then
+  begin
+    ShowMessage('O caixa está vazio. Não é possível realizar saque.');
+    Exit;
+  end;
+
+  // Solicita o valor do saque
+  LInput := InputBox('Saque', 'Digite o valor do saque:', '');
+  if not TryStrToCurr(LInput, LValor) then
+  begin
+    ShowMessage('Valor inválido!');
+    Exit;
+  end;
+
+  if LValor <= 0 then
+  begin
+    ShowMessage('Valor deve ser maior que zero!');
+    Exit;
+  end;
+
+  // Executa o saque usando a estratégia configurada
+  // O usuário não sabe qual estratégia está sendo usada
+  LResultado := FEstrategia.ComporValor(LValor, FInventario);
+
+  if LResultado.Sucesso then
+  begin
+    LMensagem := 'Saque realizado com sucesso!' + #13#10 +
+                'Cédulas entregues:' + #13#10;
+
+    for I := 0 to Length(LResultado.Cedulas) - 1 do
+      LMensagem := LMensagem + '  ' + LResultado.Cedulas[I].ToString + #13#10;
+
+    LMensagem := LMensagem + 'Total: R$ ' + FormatFloat('0.00', LResultado.ValorTotal);
+
+    FNotificadores.NotificarTodos(LMensagem);
+    FGerenciadorContas.RegistrarTransacao(-LResultado.ValorTotal, 'Saque');
+  end
+  else
+  begin
+    FNotificadores.NotificarTodos('Falha no saque: ' + LResultado.Mensagem);
+  end;
+end;
+
+procedure TfrmOperacao.btnConsultarClick(Sender: TObject);
+var
+  LCaixa: TArray<TCaixa>;
+  I: Integer;
+  LMensagem: string;
+begin
+  LCaixa := FInventario.ObterCaixa;
+
+  if Length(LCaixa) = 0 then
+  begin
+    FNotificadores.NotificarTodos('O inventário está vazio.');
+    Exit;
+  end;
+
+  for I := 0 to Length(LCaixa) - 1 do
+    LMensagem := LMensagem + LCaixa[I].ToString + #13#10;
+
+  LMensagem := #13#10 + 'Valor Total: R$ ' + FormatFloat('0.00', FInventario.ValorTotal);
+
+  FNotificadores.NotificarTodos('Estoque disponível: '+LMensagem);
+end;
+
+end.

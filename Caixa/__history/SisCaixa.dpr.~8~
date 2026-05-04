@@ -1,0 +1,17 @@
+program SisCaixa;
+
+uses
+  Vcl.Forms,
+  UnitOperacao in '..\UnitOperacao.pas' {frmOperacao},
+  UnitEstrategiaSaque in '..\UnitEstrategiaSaque.pas',
+  UnitInventario in 'UnitInventario.pas',
+  unitLogin in 'unitLogin.pas' {frmLogin};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmLogin, frmLogin);
+  Application.Run;
+end.
